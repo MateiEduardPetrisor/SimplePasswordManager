@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.PasswordField?>
+<?import javafx.scene.layout.AnchorPane?>
+
+<AnchorPane fx:id="idAnchorPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="148.0" prefWidth="413.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.ConfigurationCtrl">
+   <children>
+      <Button fx:id="idButtonSetPassword" layoutX="98.0" layoutY="116.0" mnemonicParsing="false" onAction="#setPasswordClick" text="Set Password" />
+      <Button fx:id="idButtonCancel" layoutX="230.0" layoutY="116.0" mnemonicParsing="false" onAction="#cancelClick" prefHeight="25.0" prefWidth="86.0" text="Cancel" />
+      <Label fx:id="idLabelOldPwd" layoutX="14.0" layoutY="11.0" text="Old Pwd" />
+      <PasswordField fx:id="idPassFieldOldPwd" layoutX="116.0" layoutY="7.0" prefHeight="25.0" prefWidth="296.0" />
+      <Label fx:id="idLabelConfirmOldPwd" layoutX="14.0" layoutY="37.0" text="Confirm Old Pwd" />
+      <PasswordField fx:id="idPassFieldConfirmOldPwd" layoutX="116.0" layoutY="33.0" prefHeight="25.0" prefWidth="296.0" />
+      <Label fx:id="idLabelNewPwd" layoutX="14.0" layoutY="63.0" text="New Pwd" />
+      <PasswordField fx:id="idPassFieldNewPwd" layoutX="116.0" layoutY="59.0" prefHeight="25.0" prefWidth="296.0" />
+      <Label fx:id="idLabelConfirmNewPwd" layoutX="14.0" layoutY="89.0" text="Confirm New Pwd" />
+      <PasswordField fx:id="idPassFieldConfirmNewPed" layoutX="116.0" layoutY="85.0" prefHeight="25.0" prefWidth="296.0" />
+   </children>
+</AnchorPane>
