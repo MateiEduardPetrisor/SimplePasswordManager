@@ -2,7 +2,9 @@ package app;
 
 import java.security.Provider;
 import java.security.Security;
+
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
+
 import controllers.GUILoader;
 import encryption.Encryption;
 import javafx.application.Application;
@@ -19,7 +21,7 @@ public class SimplePasswordManager extends Application {
 		}
 	}
 
-	public static void main(String[] args) throws Exception {
+	public static void run(String[] args) {
 		launch(args);
 	}
 

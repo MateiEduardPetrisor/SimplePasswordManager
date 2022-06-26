@@ -5,6 +5,7 @@ import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.security.NoSuchProviderException;
 import java.util.List;
+
 import javax.crypto.BadPaddingException;
 import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.NoSuchPaddingException;
@@ -12,11 +13,13 @@ import javax.transaction.HeuristicMixedException;
 import javax.transaction.HeuristicRollbackException;
 import javax.transaction.RollbackException;
 import javax.transaction.SystemException;
+
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 import org.hibernate.cfg.Configuration;
 import org.hibernate.query.Query;
+
 import encryption.Encryption;
 import models.Credential;
 
@@ -51,9 +54,10 @@ public class Database implements AutoCloseable {
 				Session hibernateSession = this.hibernateSessionFactory.openSession();
 				Transaction transaction = hibernateSession.beginTransaction();
 				byte[] Iv = this.api.generateInitializationVector();
+				String encIv = this.api.encode(new String(Iv));
 				String filePwd = this.api.hashPassword(password);
 				Credential master = new Credential(this.api.encode(Encryption.FILE_SIG),
-						this.api.encode(new String(Iv)), this.api.encode(filePwd));
+						this.api.encode(Encryption.MASTER), this.api.encode(filePwd), encIv);
 				hibernateSession.save(master);
 				transaction.commit();
 				hibernateSession.close();
@@ -73,7 +77,8 @@ public class Database implements AutoCloseable {
 				String filePwd = this.api.decode(master.getUserPassword());
 				String inputPwd = this.api.hashPassword(password);
 				if (filePwd.equals(inputPwd)) {
-					this.api.configure(password, this.api.decode(master.getUserName()));
+					this.api.setIv(this.api.decode(master.getUserName()));
+					this.api.setPwd(password);
 					return ApplicationError.NO_ERROR;
 				} else {
 					return ApplicationError.WRONG_PASSWORD;
@@ -115,6 +120,8 @@ public class Database implements AutoCloseable {
 		List<?> cred = (List<?>) this.readCredentials();
 		for (Object element : cred) {
 			if (element instanceof Credential) {
+				String iv = this.api.decode(((Credential) element).getIv());
+				this.api.setIv(iv);
 				String website = this.api.decrypt(((Credential) element).getWebsiteName());
 				String username = this.api.decrypt(((Credential) element).getUserName());
 				String password = this.api.decrypt(((Credential) element).getUserPassword());
@@ -131,12 +138,16 @@ public class Database implements AutoCloseable {
 			NoSuchProviderException, NoSuchPaddingException, IllegalBlockSizeException, BadPaddingException {
 		for (Object element : decryptedCredential) {
 			if (element instanceof Credential) {
+				byte[] iv = this.api.generateInitializationVector();
+				this.api.setIv(new String(iv));
+				String encIv = this.api.encode(new String(iv));
 				String website = this.api.encrypt(((Credential) element).getWebsiteName());
 				String username = this.api.encrypt(((Credential) element).getUserName());
 				String password = this.api.encrypt(((Credential) element).getUserPassword());
 				((Credential) element).setWebsiteName(website);
 				((Credential) element).setUserName(username);
 				((Credential) element).setUserPassword(password);
+				((Credential) element).setIv(encIv);
 				this.updateCredential(((Credential) element).getId(), (Credential) element);
 			}
 		}
@@ -153,16 +164,20 @@ public class Database implements AutoCloseable {
 				if (oldMaster != null) {
 					String oldPwd = this.api.hashPassword(oldPassword);
 					String filePwd = this.api.decode(oldMaster.getUserPassword());
-					this.api.configure(oldPassword, this.api.decode(oldMaster.getUserName()));
+					this.api.setPwd(oldPassword);
+					this.api.setIv(this.api.decode(oldMaster.getUserName()));
 					if (oldPwd.equals(filePwd)) {
 						if (newPassword.equals(confirmNewPassword)) {
 							List<?> credentials = this.decryptCredentials();
-							String newFilePwd = this.api.hashPassword(newPassword);
 							byte[] newIv = this.api.generateInitializationVector();
+							this.api.setIv(new String(newIv));
+							String encNewIv = this.api.encode(new String(newIv));
+							String newFilePwd = this.api.hashPassword(newPassword);
 							Credential newMaster = new Credential(this.api.encode(Encryption.FILE_SIG),
-									this.api.encode(new String(newIv)), this.api.encode(newFilePwd));
+									this.api.encode(Encryption.MASTER), this.api.encode(newFilePwd), encNewIv);
+							this.api.setPwd(newPassword);
+							this.api.setIv(new String(newIv));
 							this.updateCredential(oldMaster.getId(), newMaster);
-							this.api.configure(newPassword, new String(newIv));
 							this.encryptCredentials(credentials);
 							return ApplicationError.NO_ERROR;
 						} else {
@@ -204,12 +219,13 @@ public class Database implements AutoCloseable {
 	public void updateCredential(int id, Credential credential) {
 		Session hibernateSession = this.hibernateSessionFactory.openSession();
 		Transaction transaction = hibernateSession.beginTransaction();
-		String updateHQL = "UPDATE Credential set websiteName =: pWebsite, userName =: pUserName, userPassword =: pUserPassword WHERE id =: pId";
+		String updateHQL = "UPDATE Credential set websiteName =: pWebsite, userName =: pUserName, userPassword =: pUserPassword, iv =: pIv WHERE id =: pId";
 		Query<?> query = hibernateSession.createQuery(updateHQL);
 		query.setParameter("pId", id);
 		query.setParameter("pWebsite", credential.getWebsiteName());
 		query.setParameter("pUserName", credential.getUserName());
 		query.setParameter("pUserPassword", credential.getUserPassword());
+		query.setParameter("pIv", credential.getIv());
 		query.executeUpdate();
 		transaction.commit();
 		hibernateSession.close();

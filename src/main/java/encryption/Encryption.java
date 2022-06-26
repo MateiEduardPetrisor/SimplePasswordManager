@@ -8,6 +8,7 @@ import java.security.NoSuchAlgorithmException;
 import java.security.NoSuchProviderException;
 import java.security.SecureRandom;
 import java.util.Base64;
+
 import javax.crypto.BadPaddingException;
 import javax.crypto.Cipher;
 import javax.crypto.IllegalBlockSizeException;
@@ -20,7 +21,8 @@ public class Encryption {
 	private String pwd;
 	private byte[] Iv;
 	public static final String SECURITY_PROVIDER = "BC";
-	public static final String FILE_SIG = "P.W.D.M.G.R.V.1";
+	public static final String FILE_SIG = "P.W.D.M.G.R.V.2";
+	public static final String MASTER = "MASTER";
 	private static final String ENCRYPTION_ALGORITHM = "AES";
 	private static final String ENCRYPTION_ALGORITHM_MODE = "GCM";
 	private static final String ENCRYPTION_ALGORITHM_PADDING = "NoPadding";
@@ -43,16 +45,19 @@ public class Encryption {
 		this.Iv = null;
 	}
 
-	public void configure(String pPwd, String pIv) {
-		this.Iv = pIv.getBytes();
-		this.pwd = pPwd;
-	}
-
 	public byte[] generateInitializationVector() {
 		byte IV[] = new byte[GCM_IV_LENGTH];
 		SecureRandom random = new SecureRandom();
 		random.nextBytes(IV);
 		return IV;
+	}
+
+	public void setIv(String iv) {
+		this.Iv = iv.getBytes();
+	}
+
+	public void setPwd(String pPwd) {
+		this.pwd = pPwd;
 	}
 
 	private String generateAlgorithmSettings() {

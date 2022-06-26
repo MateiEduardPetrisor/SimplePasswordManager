@@ -1,6 +1,8 @@
 package controllers;
 
 import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
+
 import database.ApplicationError;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -145,8 +147,9 @@ public class GUILoader {
 					return passwordFormController;
 				} else {
 					try {
-						param.newInstance();
-					} catch (InstantiationException | IllegalAccessException e) {
+						param.getDeclaredConstructor().newInstance();
+					} catch (InstantiationException | IllegalAccessException | IllegalArgumentException
+							| InvocationTargetException | NoSuchMethodException | SecurityException e) {
 						e.printStackTrace();
 					}
 				}

@@ -18,20 +18,23 @@ public class Credential {
 	private int id;
 	@Column(name = "WEBSITE")
 	private String websiteName;
-	@Column(name = "USER")
+	@Column(name = "USERNAME")
 	private String userName;
 	@Column(name = "PASSWORD")
 	private String userPassword;
+	@Column(name = "IV")
+	private String iv;
 
 	public Credential() {
 		super();
 	}
 
-	public Credential(String websiteName, String userName, String userPassword) {
+	public Credential(String websiteName, String userName, String userPassword, String Iv) {
 		super();
 		this.websiteName = websiteName;
 		this.userName = userName;
 		this.userPassword = userPassword;
+		this.iv = Iv;
 	}
 
 	public int getId() {
@@ -62,8 +65,16 @@ public class Credential {
 		this.userPassword = userPassword;
 	}
 
+	public String getIv() {
+		return iv;
+	}
+
+	public void setIv(String iv) {
+		this.iv = iv;
+	}
+
 	@Override
 	public String toString() {
-		return this.id + " " + this.websiteName;
+		return this.websiteName;
 	}
 }

@@ -7,9 +7,11 @@ import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.security.NoSuchProviderException;
 import java.util.ResourceBundle;
+
 import javax.crypto.BadPaddingException;
 import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.NoSuchPaddingException;
+
 import database.ApplicationError;
 import database.Database;
 import javafx.event.ActionEvent;
@@ -106,17 +108,28 @@ public class ConfigurationCtrl implements Initializable {
 
 	@FXML
 	void initialize() {
-		assert idAnchorPane != null : "fx:id=\"idAnchorPane\" was not injected: check your FXML file 'ConfigurationForm.fxml'.";
-		assert idButtonSetPassword != null : "fx:id=\"idButtonSetPassword\" was not injected: check your FXML file 'ConfigurationForm.fxml'.";
-		assert idButtonCancel != null : "fx:id=\"idButtonCancel\" was not injected: check your FXML file 'ConfigurationForm.fxml'.";
-		assert idLabelOldPwd != null : "fx:id=\"idLabelOldPwd\" was not injected: check your FXML file 'ConfigurationForm.fxml'.";
-		assert idPassFieldOldPwd != null : "fx:id=\"idPassFieldOldPwd\" was not injected: check your FXML file 'ConfigurationForm.fxml'.";
-		assert idLabelConfirmOldPwd != null : "fx:id=\"idLabelConfirmOldPwd\" was not injected: check your FXML file 'ConfigurationForm.fxml'.";
-		assert idPassFieldConfirmOldPwd != null : "fx:id=\"idPassFieldConfirmOldPwd\" was not injected: check your FXML file 'ConfigurationForm.fxml'.";
-		assert idLabelNewPwd != null : "fx:id=\"idLabelNewPwd\" was not injected: check your FXML file 'ConfigurationForm.fxml'.";
-		assert idPassFieldNewPwd != null : "fx:id=\"idPassFieldNewPwd\" was not injected: check your FXML file 'ConfigurationForm.fxml'.";
-		assert idLabelConfirmNewPwd != null : "fx:id=\"idLabelConfirmNewPwd\" was not injected: check your FXML file 'ConfigurationForm.fxml'.";
-		assert idPassFieldConfirmNewPed != null : "fx:id=\"idPassFieldConfirmNewPed\" was not injected: check your FXML file 'ConfigurationForm.fxml'.";
+		assert idAnchorPane != null
+				: "fx:id=\"idAnchorPane\" was not injected: check your FXML file 'ConfigurationForm.fxml'.";
+		assert idButtonSetPassword != null
+				: "fx:id=\"idButtonSetPassword\" was not injected: check your FXML file 'ConfigurationForm.fxml'.";
+		assert idButtonCancel != null
+				: "fx:id=\"idButtonCancel\" was not injected: check your FXML file 'ConfigurationForm.fxml'.";
+		assert idLabelOldPwd != null
+				: "fx:id=\"idLabelOldPwd\" was not injected: check your FXML file 'ConfigurationForm.fxml'.";
+		assert idPassFieldOldPwd != null
+				: "fx:id=\"idPassFieldOldPwd\" was not injected: check your FXML file 'ConfigurationForm.fxml'.";
+		assert idLabelConfirmOldPwd != null
+				: "fx:id=\"idLabelConfirmOldPwd\" was not injected: check your FXML file 'ConfigurationForm.fxml'.";
+		assert idPassFieldConfirmOldPwd != null
+				: "fx:id=\"idPassFieldConfirmOldPwd\" was not injected: check your FXML file 'ConfigurationForm.fxml'.";
+		assert idLabelNewPwd != null
+				: "fx:id=\"idLabelNewPwd\" was not injected: check your FXML file 'ConfigurationForm.fxml'.";
+		assert idPassFieldNewPwd != null
+				: "fx:id=\"idPassFieldNewPwd\" was not injected: check your FXML file 'ConfigurationForm.fxml'.";
+		assert idLabelConfirmNewPwd != null
+				: "fx:id=\"idLabelConfirmNewPwd\" was not injected: check your FXML file 'ConfigurationForm.fxml'.";
+		assert idPassFieldConfirmNewPed != null
+				: "fx:id=\"idPassFieldConfirmNewPed\" was not injected: check your FXML file 'ConfigurationForm.fxml'.";
 	}
 
 	private void hideGuiFileds() {

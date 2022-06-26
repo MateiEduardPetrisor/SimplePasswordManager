@@ -8,11 +8,16 @@ import java.security.NoSuchAlgorithmException;
 import java.security.NoSuchProviderException;
 import java.util.List;
 import java.util.ResourceBundle;
+
 import javax.crypto.BadPaddingException;
 import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.NoSuchPaddingException;
+
 import database.Database;
 import encryption.Encryption;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+import javafx.collections.transformation.SortedList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -81,6 +86,7 @@ public class CredentialsCtrl implements Initializable {
 			NoSuchProviderException, NoSuchPaddingException, IllegalBlockSizeException, BadPaddingException {
 		Credential selected = this.idListViewPasswords.getSelectionModel().getSelectedItem();
 		if (selected != null) {
+			this.api.setIv(this.api.decode(selected.getIv()));
 			selected.setWebsiteName(this.api.encrypt(selected.getWebsiteName()));
 			this.idListViewPasswords.getItems().remove(selected);
 			this.gui.closeWindow(event);
@@ -100,24 +106,34 @@ public class CredentialsCtrl implements Initializable {
 
 	@FXML
 	void initialize() {
-		assert idAnchorPane != null : "fx:id=\"idAnchorPane\" was not injected: check your FXML file 'PasswordsListForm.fxml'.";
-		assert idListViewPasswords != null : "fx:id=\"idListViewPasswords\" was not injected: check your FXML file 'PasswordsListForm.fxml'.";
-		assert idButtonAddCredential != null : "fx:id=\"idButtonAddCredential\" was not injected: check your FXML file 'PasswordsListForm.fxml'.";
-		assert idButtonDeleteCredential != null : "fx:id=\"idButtonDeleteCredential\" was not injected: check your FXML file 'PasswordsListForm.fxml'.";
-		assert idButtonEditCredential != null : "fx:id=\"idButtonEditCredential\" was not injected: check your FXML file 'PasswordsListForm.fxml'.";
-		assert idButtonLock != null : "fx:id=\"idButtonLock\" was not injected: check your FXML file 'PasswordsListForm.fxml'.";
+		assert idAnchorPane != null
+				: "fx:id=\"idAnchorPane\" was not injected: check your FXML file 'PasswordsListForm.fxml'.";
+		assert idListViewPasswords != null
+				: "fx:id=\"idListViewPasswords\" was not injected: check your FXML file 'PasswordsListForm.fxml'.";
+		assert idButtonAddCredential != null
+				: "fx:id=\"idButtonAddCredential\" was not injected: check your FXML file 'PasswordsListForm.fxml'.";
+		assert idButtonDeleteCredential != null
+				: "fx:id=\"idButtonDeleteCredential\" was not injected: check your FXML file 'PasswordsListForm.fxml'.";
+		assert idButtonEditCredential != null
+				: "fx:id=\"idButtonEditCredential\" was not injected: check your FXML file 'PasswordsListForm.fxml'.";
+		assert idButtonLock != null
+				: "fx:id=\"idButtonLock\" was not injected: check your FXML file 'PasswordsListForm.fxml'.";
 	}
 
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
 		try {
 			List<?> cred = (List<?>) this.db.readCredentials();
-			for (Object elemet : cred) {
-				if (elemet instanceof Credential) {
-					((Credential) elemet).setWebsiteName(this.api.decrypt(((Credential) elemet).getWebsiteName()));
-					this.idListViewPasswords.getItems().add((Credential) elemet);
+			for (Object element : cred) {
+				if (element instanceof Credential) {
+					this.api.setIv(this.api.decode(((Credential) element).getIv()));
+					((Credential) element).setWebsiteName(this.api.decrypt(((Credential) element).getWebsiteName()));
+					this.idListViewPasswords.getItems().add((Credential) element);
 				}
 			}
+			ObservableList<Credential> unsortedList = this.idListViewPasswords.getItems();
+			SortedList<Credential> sortedList = this.idListViewPasswords.getItems().sorted();
+			FXCollections.copy(unsortedList, sortedList);
 		} catch (InvalidKeyException | InvalidAlgorithmParameterException | NoSuchAlgorithmException
 				| NoSuchProviderException | NoSuchPaddingException | IllegalBlockSizeException
 				| BadPaddingException e) {

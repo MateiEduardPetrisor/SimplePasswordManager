@@ -7,9 +7,11 @@ import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.security.NoSuchProviderException;
 import java.util.ResourceBundle;
+
 import javax.crypto.BadPaddingException;
 import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.NoSuchPaddingException;
+
 import database.ApplicationError;
 import database.Database;
 import javafx.event.ActionEvent;
@@ -76,10 +78,14 @@ public class LoginCtrl {
 	@FXML
 	void initialize() {
 		assert idAnchorPane != null : "fx:id=\"idScene\" was not injected: check your FXML file 'MainForm.fxml'.";
-		assert idPasswordField != null : "fx:id=\"idPasswordField\" was not injected: check your FXML file 'MainForm.fxml'.";
-		assert idLabelPassword != null : "fx:id=\"idLabelPassword\" was not injected: check your FXML file 'MainForm.fxml'.";
-		assert idButtonLogin != null : "fx:id=\"idButtonLogin\" was not injected: check your FXML file 'MainForm.fxml'.";
+		assert idPasswordField != null
+				: "fx:id=\"idPasswordField\" was not injected: check your FXML file 'MainForm.fxml'.";
+		assert idLabelPassword != null
+				: "fx:id=\"idLabelPassword\" was not injected: check your FXML file 'MainForm.fxml'.";
+		assert idButtonLogin != null
+				: "fx:id=\"idButtonLogin\" was not injected: check your FXML file 'MainForm.fxml'.";
 		assert idButtonExit != null : "fx:id=\"idButtonExit\" was not injected: check your FXML file 'MainForm.fxml'.";
-		assert idButtonSetup != null : "fx:id=\"idButtonSetup\" was not injected: check your FXML file 'MainForm.fxml'.";
+		assert idButtonSetup != null
+				: "fx:id=\"idButtonSetup\" was not injected: check your FXML file 'MainForm.fxml'.";
 	}
 }
